@@ -72,29 +72,17 @@ print enron_data['LAY KENNETH L']['total_payments']
 print enron_data['FASTOW ANDREW S']['total_payments']
 
 #How many folks in this dataset have a quantified salary? What about a known email address?
-def find_quantified_entity(data_set, entity):
+def find_quantified_salary(data_set, entity):
     result_set = []
     for key, value in data_set.iteritems():
         if value[entity] != 'NaN':
             result_set.append(value)
     return len(result_set)
 
-print "Number Quantified salary holders identified in dataset: ",find_quantified_entity(enron_data, "salary")
-print "Number Quantified salary holders with email id identified in dataset: ",find_quantified_entity(enron_data, "email_address")
-no_of_people_without_pay = len(enron_data) - find_quantified_entity(enron_data, "salary")
+print "Number Quantified salary holders identified in dataset: ",find_quantified_salary(enron_data, "salary")
+print "Number Quantified salary holders with email id identified in dataset: ",find_quantified_salary(enron_data, "email_address")
+no_of_people_without_pay = len(enron_data) - find_quantified_salary(enron_data, "salary")
 # How many people in the E+F dataset have NaN for their total payments?
-def find_non_quantified_entity(data_set, entity):
-    result_set = []
-    for key, value in data_set.iteritems():
-        if value[entity] == 'NaN':
-            result_set.append(value)
-    return len(result_set)
-
-percentage_of_NaN = find_non_quantified_entity(enron_data, "total_payments") / float(len(enron_data)) * 100
-
-print "Number of people in the E+F dataset have NaN for their total payments: ",percentage_of_NaN, "%"
-
-# read_poi_names returns list. need to return dict
-#POI = find_non_quantified_entity(read_poi_names(), "total_payments")
-#print POI
-
+print "Number of people in the E+F dataset have NaN for their total payments: ", no_of_people_without_pay
+# What percentage of people in the dataset as a whole is this?
+print "percentage of people in the E+F dataset have NaN for their total payments: ", no_of_people_without_pay
