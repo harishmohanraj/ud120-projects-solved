@@ -8,7 +8,7 @@
 
 
 import pickle
-import numpy
+import numpy as np
 import matplotlib.pyplot as plt
 import sys
 sys.path.append("../tools/")
@@ -42,10 +42,6 @@ def Draw(pred, features, poi, mark_poi=False, name="image.png", f1_name="feature
 data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r") )
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
-res = []
-for d in data_dict:
-    res.append(data_dict[d]['salary'])
-print sorted(res)
 
 
 ### the input features we want to use 
@@ -63,8 +59,8 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
-for f1, f2, f3 in finance_features:
-    plt.scatter( f1, f2, f3 )
+for f1, f2 in finance_features:
+    plt.scatter( f1, f2)
 plt.show()
 
 ### cluster here; create predictions of the cluster labels
@@ -82,3 +78,21 @@ try:
     Draw(pred, finance_features, poi, mark_poi=False, name="clusters.pdf", f1_name=feature_1, f2_name=feature_2)
 except NameError:
     print "no predictions object named pred found, no clusters to plot"
+
+
+from sklearn.preprocessing import MinMaxScaler
+
+salary = []
+exercised_stock_options = []
+for name in data_dict:
+    stock = data_dict[name]['exercised_stock_options']
+    sal = data_dict[name]['salary']
+    if not np.isnan(float(stock)):
+        exercised_stock_options.append(float(stock))
+    if not np.isnan(float(sal)):
+        salary.append(float(sal))
+scaler = MinMaxScaler()
+rescaled_salary_values = scaler.fit_transform([[float(min(salary))], [200000], [float(max(salary))]])
+print "Rescaled salary values", rescaled_salary_values
+rescaled_exercised_stock_options_values = scaler.fit_transform([[float(min(exercised_stock_options))], [200000], [float(max(exercised_stock_options))]])
+print "Rescaled exercised_stock_options values", rescaled_exercised_stock_options_values
