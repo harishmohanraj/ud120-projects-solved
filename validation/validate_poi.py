@@ -14,6 +14,9 @@ import pickle
 import sys
 sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
+from sklearn.cross_validation import train_test_split
+from sklearn.tree import tree
+from sklearn.metrics import accuracy_score
 
 data_dict = pickle.load(open("../final_project/final_project_dataset.pkl", "r") )
 
@@ -22,11 +25,16 @@ data_dict = pickle.load(open("../final_project/final_project_dataset.pkl", "r") 
 ### have a different feature list when you do the final project.
 features_list = ["poi", "salary"]
 
+sort_keys = '../tools/python2_lesson13_keys.pkl'
+
 data = featureFormat(data_dict, features_list)
 labels, features = targetFeatureSplit(data)
 
-
+X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.30, random_state=42)
 
 ### it's all yours from here forward!  
-
-
+clf = tree.DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+pred = clf.predict(X_test)
+acc = accuracy_score(y_test, pred)
+print acc
