@@ -45,7 +45,14 @@ clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 from sklearn.metrics import accuracy_score
 acc = accuracy_score(labels_test, pred)
-print acc
+print "Accuracy of the decision tree is", acc
 
+feature_names = vectorizer.get_feature_names()
+importance = clf.feature_importances_
 
+for index, feature in enumerate(importance):
+    if feature>0.2:
+        print "feature no", index        
+        print "importance", feature
+        print "word", feature_names[index]
 
